@@ -33,6 +33,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
+  toast: ^0.2.9
   google_fonts: ^4.0.4
   velocity_x: ^3.6.0
 

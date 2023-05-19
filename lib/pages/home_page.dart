@@ -281,6 +281,17 @@ class _HomePageState extends State<HomePage> {
           ).pOnly(bottom: context.percentHeight * 12)
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      floatingActionButton: FloatingActionButton(
+        // isExtended: true,
+        child: Image.asset("assets/logo.png"),
+        backgroundColor: Colors.green,
+        onPressed: () {
+          setState(() {
+            //launch shazam
+          });
+        },
+      ),
     );
   }
 }
