@@ -71,64 +71,72 @@ class _HomePageState extends State<HomePage> {
             elevation: 0.0,
             centerTitle: true,
           ).h(100.0).p16(),
-          VxSwiper.builder(
-            itemCount: radios.length,
-            aspectRatio: 1.0,
-            enlargeCenterPage: true,
-            itemBuilder: (context, index) {
-              final rad = radios[index];
-              return VxBox(
-                      child: ZStack([
-                Positioned(
-                  top: 0.0,
-                  right: 0.0,
-                  child: VxBox(
-                          child:
-                              rad.category.text.uppercase.white.make().px16())
-                      .height(40)
-                      .black
-                      .alignCenter
-                      .withRounded(value: 10.0)
-                      .make(),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: VStack(
-                    [
-                      rad.name.text.xl3.white.bold.make(),
-                      5.heightBox,
-                      rad.tagline.text.sm.white.semiBold.make(),
-                    ],
-                    crossAlignment: CrossAxisAlignment.center,
+          radios != null
+              ? VxSwiper.builder(
+                  itemCount: radios.length,
+                  aspectRatio: 1.0,
+                  enlargeCenterPage: true,
+                  itemBuilder: (context, index) {
+                    final rad = radios[index];
+                    return VxBox(
+                            child: ZStack([
+                      Positioned(
+                        top: 0.0,
+                        right: 0.0,
+                        child: VxBox(
+                                child: rad.category.text.uppercase.white
+                                    .make()
+                                    .px16())
+                            .height(40)
+                            .black
+                            .alignCenter
+                            .withRounded(value: 10.0)
+                            .make(),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: VStack(
+                          [
+                            rad.name.text.xl3.white.bold.make(),
+                            5.heightBox,
+                            rad.tagline.text.sm.white.semiBold.make(),
+                          ],
+                          crossAlignment: CrossAxisAlignment.center,
+                        ),
+                      ),
+                      Align(
+                          alignment: Alignment.center,
+                          child: [
+                            const Icon(
+                              CupertinoIcons.play_circle,
+                              color: Colors.white,
+                            ),
+                            10.heightBox,
+                            "Doube tap to play".text.gray300.make()
+                          ].vStack())
+                    ]))
+                        .clip(Clip.antiAlias)
+                        .bgImage(
+                          DecorationImage(
+                              image: NetworkImage(rad.image),
+                              fit: BoxFit.cover,
+                              colorFilter: ColorFilter.mode(
+                                  Colors.black.withOpacity(0.3),
+                                  BlendMode.darken)),
+                        )
+                        .border(color: Colors.black, width: 5.0)
+                        .withRounded(value: 60.0)
+                        .make()
+                        .onInkDoubleTap(() {
+                      _playMusic(rad.url);
+                    }).p16();
+                  },
+                ).centered()
+              : const Center(
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.white,
                   ),
                 ),
-                Align(
-                    alignment: Alignment.center,
-                    child: [
-                      const Icon(
-                        CupertinoIcons.play_circle,
-                        color: Colors.white,
-                      ),
-                      10.heightBox,
-                      "Doube tap to play".text.gray300.make()
-                    ].vStack())
-              ]))
-                  .clip(Clip.antiAlias)
-                  .bgImage(
-                    DecorationImage(
-                        image: NetworkImage(rad.image),
-                        fit: BoxFit.cover,
-                        colorFilter: ColorFilter.mode(
-                            Colors.black.withOpacity(0.3), BlendMode.darken)),
-                  )
-                  .border(color: Colors.black, width: 5.0)
-                  .withRounded(value: 60.0)
-                  .make()
-                  .onInkDoubleTap(() {
-                _playMusic(rad.url);
-              }).p16();
-            },
-          ).centered(),
           Align(
             alignment: Alignment.bottomCenter,
             child: [
