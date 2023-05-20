@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
     setupAlan();
     fetchRadios();
 
-    ACRCloud.setUp(ACRCloudConfig(
+    ACRCloud.setUp(const ACRCloudConfig(
         "6891b7722cd684f3febf0527826d155d",
         "dTAKrQI4exZWWjD4Lq4wIAO9viauaPq6r9k3kISs",
         "identify-ap-southeast-1.acrcloud.com"));
