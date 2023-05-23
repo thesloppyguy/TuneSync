@@ -15,6 +15,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+
 class _HomePageState extends State<HomePage> {
   late List<MyRadio> radios;
   late MyRadio _selectedRadio;
@@ -332,6 +333,11 @@ class _HomePageState extends State<HomePage> {
 
           setState(() {
             music = result.metadata!.music.first;
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(music!.title),
+            ));
+            print("answer " + music!.title);
+            return;
           });
         },
       ),
