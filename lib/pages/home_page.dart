@@ -1,10 +1,10 @@
-import 'package:alan_voice/alan_callback.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myapp/model/radio.dart';
 import 'package:myapp/utils/ai_util.dart';
+import 'package:flutter_acrcloud/flutter_acrcloud.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:alan_voice/alan_voice.dart';
 
@@ -15,9 +15,11 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+
 class _HomePageState extends State<HomePage> {
   late List<MyRadio> radios;
   late MyRadio _selectedRadio;
+  ACRCloudResponseMusicItem? music;
   // late Color _selectedColor;
   bool _isPlaying = false;
   final sugg = [
@@ -104,6 +106,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     setupAlan();
     fetchRadios();
+
+    ACRCloud.setUp(const ACRCloudConfig(
+        "6891b7722cd684f3febf0527826d155d",
+        "dTAKrQI4exZWWjD4Lq4wIAO9viauaPq6r9k3kISs",
+        "identify-ap-southeast-1.acrcloud.com"));
 
     _audioPlayer.onPlayerStateChanged.listen((event) {
       if (event == PlayerState.playing) {
@@ -286,9 +293,51 @@ class _HomePageState extends State<HomePage> {
         // isExtended: true,
         child: Image.asset("assets/logo.png"),
         backgroundColor: Colors.green,
-        onPressed: () {
+        onPressed: () async {
           setState(() {
-            //launch shazam
+            music = null;
+          });
+          final session = ACRCloud.startSession();
+
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => AlertDialog(
+              title: Text('Listening...'),
+              content: StreamBuilder(
+                stream: session.volumeStream,
+                initialData: 0,
+                builder: (_, snapshot) => Text(snapshot.data.toString()),
+              ),
+              actions: [
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: session.cancel,
+                )
+              ],
+            ),
+          );
+
+          final result = await session.result;
+          Navigator.pop(context);
+
+          if (result == null) {
+            // Cancelled.
+            return;
+          } else if (result.metadata == null) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('No result.'),
+            ));
+            return;
+          }
+
+          setState(() {
+            music = result.metadata!.music.first;
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(music!.title),
+            ));
+            print("answer " + music!.title);
+            return;
           });
         },
       ),
